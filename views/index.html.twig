@@ -1,0 +1,15 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+{% for ticket in tickets %}
+    <div class="row">
+    	<article>
+    		<h2><a href="">{{ ticket.title }}</a></h2>
+    		<p>{{ ticket.content|nl2br }}</p>
+    		<p class="align-right italic"><span class="bold">Mis en ligne le :</span> {{ ticket.dateCreation }}</p>
+    	</article>
+    </div>
+{% endfor %}
+{% endblock %}

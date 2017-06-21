@@ -1,0 +1,78 @@
+/**
+ * CSS PROPERTY FOR APPLICATION :
+ *
+ * BilletSimpleAlaska
+ */
+
+/**
+ * Main page properties
+ */
+
+a:hover, a:focus
+{
+	text-decoration : none;
+}
+
+body
+{
+	background-color : #E9EAED;
+	padding-top : 90px;
+	text-align : justify;
+}
+
+h1
+{
+	color : white;
+	font-family: 'Open Sans', sans-serif;
+	font-size : 2em;
+}
+
+h2
+{
+	font-size : 1.5em;
+	font-weight : bold;
+	text-align: center;
+}
+
+nav
+{
+	background-color : #333333;
+	padding-bottom : 10px;
+}
+
+footer
+{
+    border-top : 1px solid #ccc;
+    padding-top : 10px;
+    text-align : center;
+}
+
+.align-right
+{
+	text-align : right; 
+}
+
+.bold
+{
+	font-weight : bold;
+}
+
+.italic
+{
+	font-style : italic;
+}
+
+
+/**
+ * Home page specifications
+ */
+
+
+article
+{
+	background-color : #FFFFFF;
+	border : 1px solid #b1b1b1;
+	border-radius : 5px;
+	margin-bottom : 20px;
+	padding : 0 20px 10px 20px;
+}
