@@ -82,7 +82,7 @@ footer
 }
 
 /**
- * Home page specifications
+ * Ticket view specifications
  */
 
 
@@ -93,4 +93,32 @@ article
 	border-radius : 5px;
 	margin-bottom : 20px;
 	padding : 0 20px 10px 20px;
+}
+
+/**
+ * Comment specifications
+ */
+
+fieldset
+{
+	background-color : #FFFFFF;
+	border : 1px solid #b1b1b1;
+	padding-bottom : 40px;
+}
+
+legend span
+{
+	font-size : 0.5em;
+	margin-top : 9px;
+}
+
+.well
+{
+	padding-bottom : 40px;
+}
+
+.well a
+{
+	color : #e74c3c;
+	margin-bottom : 20px; 
 }
