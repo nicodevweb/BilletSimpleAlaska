@@ -60,4 +60,23 @@ class Ticket
 		$this->dateCreation = $dateCreation;
 		return $this;
 	}
+
+	/**
+	 * Reduce @var $content to 600 characters max and set attribute
+	 */
+
+	public function setPortionContent($content)
+	{
+		if (strlen($content) <= 200)
+		{
+			$ticket->setContent($content);
+		}
+		else
+		{
+			$debut = substr($content, 0, 600);
+      		$debut = substr($debut, 0, strrpos($debut, ' ')) . '...';
+
+      		$this->setContent($debut);
+		}
+	}
 }

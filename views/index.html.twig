@@ -2,13 +2,24 @@
 
 {% block title %}Accueil{% endblock %}
 
+{% block path %}
+	<div class="row">
+		<div class="path">
+			<p class="container"><a href="{{ path('home') }}">Accueil</a></p>
+		</div>
+	</div>
+{% endblock %}
+
 {% block content %}
 {% for ticket in tickets %}
     <div class="row">
     	<article>
     		<h2><a href="{{ path('ticket', {'id': ticket.id}) }}">{{ ticket.title }}</a></h2>
     		<p>{{ ticket.content|nl2br }}</p>
-    		<p class="align-right italic"><span class="bold">Mis en ligne le :</span> {{ ticket.dateCreation }}</p>
+    		<p class="italic">
+    			<span class="bold">Mis en ligne :</span> le {{ ticket.dateCreation }}
+    			<span class="pull-right italic"><a href="{{ path('ticket', {'id': ticket.id}) }}">Lire la suite...</a></span>
+    		</p>
     	</article>
     </div>
 {% endfor %}

@@ -16,7 +16,7 @@ a:hover, a:focus
 body
 {
 	background-color : #E9EAED;
-	padding-top : 90px;
+	padding-top : 70px;
 	text-align : justify;
 }
 
@@ -25,6 +25,11 @@ h1
 	color : white;
 	font-family: 'Open Sans', sans-serif;
 	font-size : 2em;
+}
+
+h1 a, h1 a:hover, h1 a:focus
+{
+	color : inherit;
 }
 
 h2
@@ -62,6 +67,19 @@ footer
 	font-style : italic;
 }
 
+.path
+{
+	background-color : white;
+	border-bottom : 1px solid #ccc;
+	margin-bottom : 20px;
+	line-height: 40px;
+}
+
+.path p
+{
+	margin-bottom : 0px;
+	padding : 0px;
+}
 
 /**
  * Home page specifications

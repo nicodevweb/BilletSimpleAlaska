@@ -1,10 +1,17 @@
 {% extends "layout.html.twig" %}
 
-{% block title %}ticket.title{% endblock %}
+{% block title %}{{ ticket.title }}{% endblock %}
+
+{% block path %}
+	<div class="row">
+		<div class="path">
+			<p class="container"><a href="{{ path('home') }}">Accueil</a> > {{ ticket.title }}</p>
+		</div>
+	</div>
+{% endblock %}
 
 {% block content %}
     <div class="row">
-    	<p><a href="{{ path('home') }}">Accueil</a> > ticket.title</p>
     	<article>
     		<h2>{{ ticket.title }}</h2>
     		<p>{{ ticket.content|nl2br }}</p>

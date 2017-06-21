@@ -22,7 +22,7 @@ class TicketDAO extends DAO
 		foreach ($result AS $row)
 		{
 			$ticketId = $row['tick_id'];
-			$tickets[$ticketId] = $this->buildDomainObject($row);
+			$tickets[$ticketId] = $this->buildUncompleteDomainObject($row);
 		}
 
 		return $tickets;
@@ -60,6 +60,17 @@ class TicketDAO extends DAO
 		$ticket->setId($row['tick_id']);
 		$ticket->setTitle($row['tick_title']);
 		$ticket->setContent($row['tick_content']);
+		$ticket->setDateCreation($row['date_creation']);
+
+		return $ticket;
+	}
+
+	public function buildUncompleteDomainObject(array $row)
+	{
+		$ticket = new Ticket();
+		$ticket->setId($row['tick_id']);
+		$ticket->setTitle($row['tick_title']);
+		$ticket->setPortionContent($row['tick_content']);
 		$ticket->setDateCreation($row['date_creation']);
 
 		return $ticket;
