@@ -1,15 +1,14 @@
 {% extends "layout.html.twig" %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}ticket.title{% endblock %}
 
 {% block content %}
-{% for ticket in tickets %}
     <div class="row">
+    	<p><a href="{{ path('home') }}">Accueil</a> > ticket.title</p>
     	<article>
-    		<h2><a href="{{ path('ticket', {'id': ticket.id}) }}">{{ ticket.title }}</a></h2>
+    		<h2>{{ ticket.title }}</h2>
     		<p>{{ ticket.content|nl2br }}</p>
     		<p class="align-right italic"><span class="bold">Mis en ligne le :</span> {{ ticket.dateCreation }}</p>
     	</article>
     </div>
-{% endfor %}
 {% endblock %}

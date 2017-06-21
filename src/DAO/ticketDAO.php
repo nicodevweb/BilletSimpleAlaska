@@ -14,7 +14,7 @@ class TicketDAO extends DAO
 
 	public function findAll()
 	{
-		$sql = 'SELECT * FROM t_ticket ORDER BY tick_id DESC';
+		$sql = 'SELECT tick_id, tick_title, tick_content, DATE_FORMAT(tick_date, "%d/%m/%Y à %Hh%i") AS date_creation FROM t_ticket ORDER BY tick_id DESC';
 		$result = $this->getDb()->fetchAll($sql);
 
 		// Convert query results to an array of domain objects
@@ -26,6 +26,25 @@ class TicketDAO extends DAO
 		}
 
 		return $tickets;
+	}
+
+	/**
+     * Return an article matching the supplied id.
+     *
+     * @param integer $id The ticket id
+     *
+     * @return \BilletSimpleAlaska\Domain\Ticket
+     */
+
+	public function find($id)
+	{
+		$sql = 'SELECT tick_id, tick_title, tick_content, DATE_FORMAT(tick_date, "%d/%m/%Y à %Hh%i") AS date_creation FROM t_ticket WHERE tick_id = ?';
+		$row = $this->getDb()->fetchAssoc($sql, array($id));
+
+		if ($row)
+			return $this->buildDomainObject($row);
+		else
+            throw new \Exception("Aucun billet ne correspond à l'identifiant n°" . $id);
 	}
 
 	/**
@@ -41,7 +60,7 @@ class TicketDAO extends DAO
 		$ticket->setId($row['tick_id']);
 		$ticket->setTitle($row['tick_title']);
 		$ticket->setContent($row['tick_content']);
-		$ticket->setDateCreation($row['tick_date']);
+		$ticket->setDateCreation($row['date_creation']);
 
 		return $ticket;
 	}
