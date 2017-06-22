@@ -9,5 +9,6 @@ $app->get('/', function () use ($app) {
 // Ticket page
 $app->get('/ticket/{id}', function ($id) use ($app) {
     $ticket = $app['dao.ticket']->find($id);
-	return $app['twig']->render('ticket.html.twig', array('ticket' => $ticket));
+    $comments = $app['dao.comment']->findAllByTicket($id);
+	return $app['twig']->render('ticket.html.twig', array('ticket' => $ticket, 'comments' => $comments));
 })->bind('ticket');

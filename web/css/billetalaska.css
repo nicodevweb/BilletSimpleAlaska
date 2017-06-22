@@ -89,7 +89,7 @@ footer
 article
 {
 	background-color : #FFFFFF;
-	border : 1px solid #b1b1b1;
+	border : 1px solid #ccc;
 	border-radius : 5px;
 	margin-bottom : 20px;
 	padding : 0 20px 10px 20px;
@@ -99,17 +99,27 @@ article
  * Comment specifications
  */
 
-fieldset
-{
-	background-color : #FFFFFF;
-	border : 1px solid #b1b1b1;
-	padding-bottom : 40px;
-}
+ legend
+ {
+ 	margin-bottom : 0px;
+ }
 
 legend span
 {
 	font-size : 0.5em;
 	margin-top : 9px;
+}
+
+.comment-content
+{
+	background-color : #FFFFFF;
+	padding : 20px 10px 40px 10px;
+}
+
+.no-comment
+{
+	margin-top : 30px;
+	text-align : center;
 }
 
 .well
@@ -120,5 +130,5 @@ legend span
 .well a
 {
 	color : #e74c3c;
-	margin-bottom : 20px; 
+	margin-bottom : 40px; 
 }

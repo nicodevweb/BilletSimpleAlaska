@@ -20,23 +20,15 @@
     </div>
     <div class="row">
         <div class="well">
-            <legend><strong>Robert</strong> a dit : <span class="pull-right">Publié le : 10/07/2017 à 13h54</span></legend>
-            <p>
-                Je peine à y croire ... Cette histoire est tellement bouleversante !
+        {% for comment in comments %}
+            <legend><strong>{{ comment.author }}</strong> a dit : <span class="pull-right">{{ comment.dateCreation }}</legend>
+            <p class="comment-content">
+                {{ comment.content }}<br>
+                <a href="" class="pull-right">Signaler un abus</a>
             </p>
-            <a href="" class="pull-right">Signaler un abus</a>
-
-            <legend><strong>Charlotte</strong> a dit : <span class="pull-right">Publié le : 08/07/2017 à 09h28</span></legend>
-            <p>
-                Cette histoire ... A la fois lyrique et onirique ... Je me perds encore et encore dans la passion transmise par l'auteur. Des fois, je me surprends en train de rire, d'autres fois, en train de pleurer ... Merci encore à l'auteur, il m'a fait découvrir un univers à la fois touchant et tellement sans merci !
-            </p>
-            <a href="" class="pull-right">Signaler un abus</a>
-
-            <legend><strong>Jacqueline</strong> a dit : <span class="pull-right">Publié le : 30/06/2017 à 18h06</span></legend>
-            <p>
-                Un nouveau chapitre certainement plus intéressant que ceux qui le précèdent. L'intrigue évolue, le suspens est total !
-            </p>
-            <a href="" class="pull-right">Signaler un abus</a>
+        {% else %}
+            <p class="no-comment">Aucun commentaire n'est disponible pour le moment.</p>
+        {% endfor %}
         </div>
     </div>
 {% endblock %}
