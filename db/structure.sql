@@ -1,5 +1,6 @@
 drop table if exists t_ticket;
 drop table if exists t_comment;
+drop table if exists t_user;
 
 CREATE TABLE t_ticket (
 	tick_id integer NOT NULL PRIMARY KEY auto_increment,
