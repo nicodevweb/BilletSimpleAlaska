@@ -12,6 +12,11 @@ class CommentDAO extends DAO
 
 	private $ticketDAO;
 
+	/**
+	 * @var  BilletSimpleAlaska\DAO\userDAO
+	 */
+
+	private $userDAO;
 
 	/**
 	 * Return list of all comments for a ticket, sorted by date (most recent last)
@@ -26,7 +31,7 @@ class CommentDAO extends DAO
 		// The associated ticket is retrived only once
 		$ticket = $this->ticketDAO->find($ticketId);
 
-		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id FROM t_comment WHERE tick_id = ? ORDER BY com_id';
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id FROM t_comment WHERE tick_id = ? ORDER BY com_id';
 		$result = $this->getDb()->fetchAll($sql, array($ticketId));
 
 		// Convert query result in an array of Domain objects
@@ -51,11 +56,10 @@ class CommentDAO extends DAO
      * @return \MicroCMS\Domain\Comment
      */
 
-	public function buildDomainObject(array $row)
+	protected function buildDomainObject(array $row)
 	{
 		$comment = new Comment();
 		$comment->setId($row['com_id']);
-		$comment->setAuthor($row['com_author']);
 		$comment->setContent($row['com_content']);
 		$comment->setDateCreation($row['date_creation']);
 		
@@ -64,6 +68,13 @@ class CommentDAO extends DAO
 			$ticketId = $row['tick_id'];
 			$ticket = $this->ticketDAO->find($ticketId);
 			$comment->setTicket($ticket);
+		}
+
+		if (array_key_exists('usr_id', $row))
+		{
+			$userId = $row['usr_id'];
+			$user = $this->userDAO->find($userId);
+			$comment->setAuthor($user);
 		}
 
 		return $comment;
@@ -76,5 +87,10 @@ class CommentDAO extends DAO
 	public function setTicketDAO(TicketDAO $ticketDAO)
 	{
 		$this->ticketDAO = $ticketDAO;
+	}
+
+	public function setUserDAO(UserDAO $userDAO)
+	{
+		$this->userDAO = $userDAO;
 	}
 }

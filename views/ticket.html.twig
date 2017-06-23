@@ -2,14 +2,6 @@
 
 {% block title %}{{ ticket.title }}{% endblock %}
 
-{% block path %}
-	<div class="row">
-		<div class="path">
-			<p class="container"><a href="{{ path('home') }}">Accueil</a> > {{ ticket.title }}</p>
-		</div>
-	</div>
-{% endblock %}
-
 {% block content %}
     <div class="row">
     	<article>
@@ -18,10 +10,11 @@
     		<p class="align-right italic"><span class="bold">Mis en ligne le :</span> {{ ticket.dateCreation }}</p>
     	</article>
     </div>
+
     <div class="row">
         <div class="well">
         {% for comment in comments %}
-            <legend><strong>{{ comment.author }}</strong> a dit : <span class="pull-right">{{ comment.dateCreation }}</legend>
+            <legend><strong>{{ comment.author.username }}</strong> a dit : <span class="pull-right">{{ comment.dateCreation }}</legend>
             <p class="comment-content">
                 {{ comment.content }}<br>
                 <a href="" class="pull-right">Signaler un abus</a>
@@ -29,6 +22,13 @@
         {% else %}
             <p class="no-comment">Aucun commentaire n'est disponible pour le moment.</p>
         {% endfor %}
+
+        <h3>Ajouter un commentaire</h3>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            Soon!
+        {% else %}
+            <a href="{{ path('login') }} ">Se connecter</a> pour ajouter un commentaire.
+        {% endif %}
         </div>
     </div>
 {% endblock %}

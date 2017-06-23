@@ -5,6 +5,7 @@ namespace BilletSimpleAlaska\Domain;
 class Comment
 {
 	private	$id,
+			$authorName,
 			$content,
 			$dateCreation;
 	/**
@@ -26,6 +27,11 @@ class Comment
 	public function getId()
 	{
 		return $this->id;
+	}
+
+	public function getAuthorName()
+	{
+		return $this->authorName;
 	}
 
 	public function getContent()
@@ -76,7 +82,7 @@ class Comment
 		return $this;
 	}
 
-	public function setAuthor($author)
+	public function setAuthor(User $author)
 	{
 		$this->author = $author;
 		return $this;

@@ -2,14 +2,6 @@
 
 {% block title %}Accueil{% endblock %}
 
-{% block path %}
-	<div class="row">
-		<div class="path">
-			<p class="container"><a href="{{ path('home') }}">Accueil</a></p>
-		</div>
-	</div>
-{% endblock %}
-
 {% block content %}
 {% for ticket in tickets %}
     <div class="row">

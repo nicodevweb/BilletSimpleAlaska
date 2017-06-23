@@ -4,9 +4,11 @@
  * BilletSimpleAlaska
  */
 
+
 /**
  * Main page properties
  */
+
 
 a:hover, a:focus
 {
@@ -16,20 +18,8 @@ a:hover, a:focus
 body
 {
 	background-color : #E9EAED;
-	padding-top : 70px;
+	padding-top : 80px;
 	text-align : justify;
-}
-
-h1
-{
-	color : white;
-	font-family: 'Open Sans', sans-serif;
-	font-size : 2em;
-}
-
-h1 a, h1 a:hover, h1 a:focus
-{
-	color : inherit;
 }
 
 h2
@@ -41,8 +31,7 @@ h2
 
 nav
 {
-	background-color : #333333;
-	padding-bottom : 10px;
+	background-color: #3b3b3b;
 }
 
 footer
@@ -67,19 +56,11 @@ footer
 	font-style : italic;
 }
 
-.path
+.navbar-brand
 {
-	background-color : white;
-	border-bottom : 1px solid #ccc;
-	margin-bottom : 20px;
-	line-height: 40px;
+	font-size : 1.8em;
 }
 
-.path p
-{
-	margin-bottom : 0px;
-	padding : 0px;
-}
 
 /**
  * Ticket view specifications
@@ -95,9 +76,11 @@ article
 	padding : 0 20px 10px 20px;
 }
 
+
 /**
  * Comment specifications
  */
+
 
  legend
  {
@@ -131,4 +114,15 @@ legend span
 {
 	color : #e74c3c;
 	margin-bottom : 40px; 
+}
+
+
+/**
+ * Login specifications
+ */
+
+
+form
+{
+	margin-top : 40px;
 }

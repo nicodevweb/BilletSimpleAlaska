@@ -10,24 +10,56 @@
     <title>Un Billet pour l'Alaska - {% block title %}{% endblock %}</title>
 </head>
 <body>
-	<div class="container-fluid">
-		<nav class="navbar-fixed-top">
-			<div class="container">
-				<div class="row">
-					<h1><a href="{{ path('home') }}">Un Billet pour l'Alaska</a></h1>
-				</div>
-			</div>
-		</nav>
-		{% block path %}{% endblock %}
-		<div class="container">
-			{% block content %}{% endblock %}
+	<div class="container">
+        <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-target">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ path('home') }}">Un Billet pour l'Alaska</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-collapse-target">
+                    <ul class="nav nav-inverse navbar-nav navbar-right">
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-user"></span> Bienvenue, {{ app.user.username }} <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ path('logout') }}">Se déconnecter</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-user"></span> Utilisateur anonyme <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ path('login') }}">Connexion</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div><!-- /.container -->
+        </nav>
+	</div>
+	
+	<div class="container">
+		{% block content %}{% endblock %}
+	</div>
+
+	<footer class="container">
+		<div class="row">
+			<p><a href="{{ path('home') }}">Un Billet pour l'Alaska</a> : une application développée par Nicolas GINDRE pour Openclassrooms.</p>
+			<p>Compétences utilisées : PHP (POO), Silex, Twig, Bootstrap</p>
 		</div>
-		<footer class="container">
-			<div class="row">
-				<p><a href="{{ path('home') }}">Un Billet pour l'Alaska</a> : une application développée par Nicolas GINDRE pour Openclassrooms.</p>
-				<p>Compétences utilisées : PHP (POO), Silex, Twig, Bootstrap</p>
-			</div>
-		</footer>
-    </div>
+	</footer>
+
+    <!-- jQuery -->
+    <script src="{{ asset('/lib/jquery/jquery.min.js') }}"></script>
+    <!-- JavaScript Boostrap plugin -->
+    <script src="{{ asset('/lib/bootstrap/js/bootstrap.min.js') }}"></script>
 </body>
 </html>
