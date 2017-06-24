@@ -60,6 +60,7 @@ class CommentDAO extends DAO
 		$commentData = array(
 			'tick_id' => $comment->getTicket()->getId(),
 			'usr_id' => $comment->getAuthor()->getId(),
+			'com_author' => $comment->getAuthor()->getUsername(),
 			'com_content' => $comment->getContent()
 		);
 
