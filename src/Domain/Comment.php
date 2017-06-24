@@ -5,7 +5,6 @@ namespace BilletSimpleAlaska\Domain;
 class Comment
 {
 	private	$id,
-			$authorName,
 			$content,
 			$dateCreation;
 	/**

@@ -24,8 +24,25 @@
         {% endfor %}
 
         <h3>Ajouter un commentaire</h3>
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            Soon!
+        {% if commentForm %}
+            {{ form_start(commentForm) }}
+                <div class="form-group">
+                    {{ form_errors(commentForm.content) }}
+                    {{ form_widget(commentForm.content, { 'attr':  {
+                        'rows': '4',
+                        'class': 'form-control',
+                        'placeholder': 'Saisissez votre commentaire'
+                    }}) }}
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Publier le commentaire" />
+                </div>
+            {{ form_end(commentForm) }}
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
         {% else %}
             <a href="{{ path('login') }} ">Se connecter</a> pour ajouter un commentaire.
         {% endif %}
