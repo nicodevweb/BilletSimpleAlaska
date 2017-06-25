@@ -24,48 +24,52 @@ Sed ut enim et enim vestibulum tempor congue non tortor. Proin sem tellus, sempe
 
 Aenean mollis lacus risus, eu tincidunt ligula eleifend sed. Nunc pretium magna eget urna viverra, quis sollicitudin sapien facilisis. Maecenas et ligula est. Maecenas accumsan, ante vel convallis lobortis, orci magna suscipit eros, nec bibendum massa mauris et nulla. Maecenas vel pretium odio, a vehicula dui. Quisque nec tempor velit, a scelerisque mauris. Sed nec ligula tellus. Nunc convallis scelerisque leo, a posuere risus pulvinar et. Duis iaculis, quam suscipit tincidunt vehicula, neque metus feugiat mauris, eget imperdiet arcu justo in lorem. Vivamus pellentesque nibh quam, eget tincidunt lacus feugiat dapibus. Donec tincidunt sit amet mi sodales efficitur. Vestibulum vel nisl quis nulla eleifend pretium eu sed velit. Duis suscipit metus in placerat volutpat. Morbi dignissim diam ut molestie consectetur. Aliquam ipsum orci, pulvinar eget ipsum quis, sollicitudin pretium purus.', NOW());
 
+/*raw password is @dm1nBilletalaska */
+
+insert into t_user values
+(1, 'admin', '$2y$13$hurduYvNZCPTOkTg/IE9tucyQ06GFmdLTyNTYV33sbXId3jdnoS0y', 'EDDsl&fBCJB|a5XUtAlnQN8', 'ROLE_ADMIN');
 
 /* raw password is 'john' */
 insert into t_user values
-(1, 'Michel', '$2y$13$F9v8pl5u5WMrCorP9MLyJeyIsOLj.0/xqKd/hqa5440kyeB7FQ8te', 'YcM=A$nsYzkyeDVjEUa7W9K', 'ROLE_USER');
+(2, 'Michel', '$2y$13$F9v8pl5u5WMrCorP9MLyJeyIsOLj.0/xqKd/hqa5440kyeB7FQ8te', 'YcM=A$nsYzkyeDVjEUa7W9K', 'ROLE_USER');
 
 insert into t_user values
-(2, 'Robert', '$2y$13$F9v8pl5u5WMrCorP9MLyJeyIsOLj.0/xqKd/hqa5440kyeB7FQ8te', 'YcM=A$nsYzkyeDVjEUa7W9K', 'ROLE_USER');
+(3, 'Robert', '$2y$13$F9v8pl5u5WMrCorP9MLyJeyIsOLj.0/xqKd/hqa5440kyeB7FQ8te', 'YcM=A$nsYzkyeDVjEUa7W9K', 'ROLE_USER');
 
 insert into t_user values
-(3, 'Lucas', '$2y$13$F9v8pl5u5WMrCorP9MLyJeyIsOLj.0/xqKd/hqa5440kyeB7FQ8te', 'YcM=A$nsYzkyeDVjEUa7W9K', 'ROLE_USER');
+(4, 'Lucas', '$2y$13$F9v8pl5u5WMrCorP9MLyJeyIsOLj.0/xqKd/hqa5440kyeB7FQ8te', 'YcM=A$nsYzkyeDVjEUa7W9K', 'ROLE_USER');
 
 /* raw password is 'jane' */
 insert into t_user values
-(4, 'Charlotte', '$2y$13$qOvvtnceX.TjmiFn4c4vFe.hYlIVXHSPHfInEG21D99QZ6/LM70xa', 'dhMTBkzwDKxnD;4KNs,4ENy', 'ROLE_USER');
+(5, 'Charlotte', '$2y$13$qOvvtnceX.TjmiFn4c4vFe.hYlIVXHSPHfInEG21D99QZ6/LM70xa', 'dhMTBkzwDKxnD;4KNs,4ENy', 'ROLE_USER');
 
 insert into t_user values
-(5, 'Jacqueline', '$2y$13$qOvvtnceX.TjmiFn4c4vFe.hYlIVXHSPHfInEG21D99QZ6/LM70xa', 'dhMTBkzwDKxnD;4KNs,4ENy', 'ROLE_USER');
+(6, 'Jacqueline', '$2y$13$qOvvtnceX.TjmiFn4c4vFe.hYlIVXHSPHfInEG21D99QZ6/LM70xa', 'dhMTBkzwDKxnD;4KNs,4ENy', 'ROLE_USER');
 
 insert into t_user values
-(6, 'Véronique', '$2y$13$qOvvtnceX.TjmiFn4c4vFe.hYlIVXHSPHfInEG21D99QZ6/LM70xa', 'dhMTBkzwDKxnD;4KNs,4ENy', 'ROLE_USER');
+(7, 'Véronique', '$2y$13$qOvvtnceX.TjmiFn4c4vFe.hYlIVXHSPHfInEG21D99QZ6/LM70xa', 'dhMTBkzwDKxnD;4KNs,4ENy', 'ROLE_USER');
 
 
 insert into t_comment values
-(1, 'Robert', 'Je peine à y croire ... Cette histoire est tellement bouleversante !', NOW(), 3, 2);
+(1, 'Robert', 'Je peine à y croire ... Cette histoire est tellement bouleversante !', '2017-06-23 12:57:02', 3, 2);
 
 insert into t_comment values
-(2, 'Charlotte', 'Cette histoire ... A la fois lyrique et onirique ... Je me perds encore et encore dans la passion transmise par l\'auteur. Des fois, je me surprends en train de rire, d\'autres fois, en train de pleurer ... Merci encore à l\'auteur, il m\'a fait découvrir un univers à la fois touchant et tellement sans merci !', NOW(), 4, 4);
+(2, 'Charlotte', 'Cette histoire ... A la fois lyrique et onirique ... Je me perds encore et encore dans la passion transmise par l\'auteur. Des fois, je me surprends en train de rire, d\'autres fois, en train de pleurer ... Merci encore à l\'auteur, il m\'a fait découvrir un univers à la fois touchant et tellement sans merci !', '2017-06-23 13:01:23', 4, 4);
 
 insert into t_comment values
-(3, 'Jacqueline', 'Un nouveau chapitre certainement plus intéressant que ceux qui le précèdent. L\'intrigue évolue, le suspens est total !', NOW(), 4, 5);
+(3, 'Jacqueline', 'Un nouveau chapitre certainement plus intéressant que ceux qui le précèdent. L\'intrigue évolue, le suspens est total !', '2017-06-23 18:34:41', 4, 5);
 
 insert into t_comment values
-(4, 'Michel', 'Maecenas imperdiet blandit scelerisque. In ac justo risus. Fusce dictum blandit consectetur.', NOW(), 1, 1);
+(4, 'Michel', 'Maecenas imperdiet blandit scelerisque. In ac justo risus. Fusce dictum blandit consectetur.', '2017-06-23 22:24:09', 1, 1);
 
 insert into t_comment values
-(5, 'Véronique', 'Vestibulum tincidunt sit amet massa vitae condimentum. Etiam pharetra odio lorem, ac imperdiet lorem ornare ac.', NOW(), 4, 6);
+(5, 'Véronique', 'Vestibulum tincidunt sit amet massa vitae condimentum. Etiam pharetra odio lorem, ac imperdiet lorem ornare ac.', '2017-06-24 00:43:18', 4, 6);
 
 insert into t_comment values
-(6, 'Charlotte', 'Mauris condimentum auctor lacus, malesuada maximus ipsum blandit vitae.', NOW(), 1, 4);
+(6, 'Charlotte', 'Mauris condimentum auctor lacus, malesuada maximus ipsum blandit vitae.', '2017-06-24 10:26:11', 1, 4);
 
 insert into t_comment values
-(7, 'Michel', 'Nam ultrices, lacus non vestibulum dictum, quam nulla tincidunt enim, in auctor sem nulla at est. Quisque pellentesque eleifend aliquet. In sed convallis erat. Morbi id vehicula nibh.', NOW(), 1, 1);
+(7, 'Michel', 'Nam ultrices, lacus non vestibulum dictum, quam nulla tincidunt enim, in auctor sem nulla at est. Quisque pellentesque eleifend aliquet. In sed convallis erat. Morbi id vehicula nibh.', '2017-06-24 11:44:56', 1, 1);
 
 insert into t_comment values
-(8, 'Lucas', 'Cras consectetur dignissim eros in elementum. Quisque iaculis congue lorem, lobortis rhoncus sapien tincidunt sed.', NOW(), 1, 3);
+(8, 'Lucas', 'Cras consectetur dignissim eros in elementum. Quisque iaculis congue lorem, lobortis rhoncus sapien tincidunt sed.', '2017-06-24 11:56:27', 1, 3);

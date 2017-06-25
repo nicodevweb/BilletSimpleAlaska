@@ -31,7 +31,7 @@ class CommentDAO extends DAO
 		// The associated ticket is retrived only once
 		$ticket = $this->ticketDAO->find($ticketId);
 
-		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id FROM t_comment WHERE tick_id = ? ORDER BY com_id';
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id FROM t_comment WHERE tick_id = ? ORDER BY com_id DESC';
 		$result = $this->getDb()->fetchAll($sql, array($ticketId));
 
 		// Convert query result in an array of Domain objects
