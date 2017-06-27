@@ -72,6 +72,7 @@
     <script>
         tinymce.init({ 
             selector : "textarea.editable",
+            entity_encoding : "raw",
             valid_elements : '*[*]',
             setup: function (editor) {
                 editor.on('change', function (e) {
