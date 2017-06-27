@@ -7,9 +7,9 @@ use BilletSimpleAlaska\Domain\Ticket;
 class TicketDAO extends DAO
 {
 	/**
-     * Return a list of all articles, sorted by date (most recent first).
+     * Return a list of all Tickets, sorted by date (most recent first).
      *
-     * @return array A list of all articles.
+     * @return array A list of all Tickets.
      */
 
 	public function findAll()
@@ -22,14 +22,14 @@ class TicketDAO extends DAO
 		foreach ($result AS $row)
 		{
 			$ticketId = $row['tick_id'];
-			$tickets[$ticketId] = $this->buildUncompleteDomainObject($row);
+			$tickets[$ticketId] = $this->buildDomainObject($row);
 		}
 
 		return $tickets;
 	}
 
 	/**
-     * Return an article matching the supplied id.
+     * Return a Ticket matching the supplied id.
      *
      * @param integer $id The ticket id
      *
@@ -65,14 +65,44 @@ class TicketDAO extends DAO
 		return $ticket;
 	}
 
-	public function buildUncompleteDomainObject(array $row)
-	{
-		$ticket = new Ticket();
-		$ticket->setId($row['tick_id']);
-		$ticket->setTitle($row['tick_title']);
-		$ticket->setPortionContent($row['tick_content']);
-		$ticket->setDateCreation($row['date_creation']);
+	/**
+     * Saves an article into the database.
+     *
+     * @param \BilletSimpleAlaska\Domain\Ticket $ticket The ticket to save
+     */
 
-		return $ticket;
+    public function save(Ticket $ticket)
+    {
+    	$ticketData = array(
+    		'tick_title' => $ticket->getTitle(),
+    		'tick_content' => $ticket->getContent()
+    	);
+
+    	if ($ticket->getId())
+    	{
+    		// The ticket has already been saved : update it
+    		$this->getDb()->update('t_ticket', $ticketData, array('tick_id' => $ticket->getId()));
+    	}
+    	else
+    	{
+    		// The ticket has never been saved : insert it
+    		$this->getDb()->insert('t_ticket', $ticketData);
+    	}
+
+		// Get the id of the newly created comment and set it on the entity
+		$id = $this->getDb()->lastInsertId();
+		$ticket->setId($id);    	
+    }
+	
+	/**
+     * Saves a Ticket into the database.
+     *
+     * @param integer $id The Ticket id.
+     */
+
+	public function delete($id)
+	{
+		// Delete the ticket
+		$this->getDb()->delete('t_ticket', array('tick_id' => $id));
 	}
 }

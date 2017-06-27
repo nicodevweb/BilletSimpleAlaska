@@ -19,6 +19,47 @@ class CommentDAO extends DAO
 	private $userDAO;
 
 	/**
+     * Return a Comment matching the supplied id.
+     *
+     * @param integer $id The comment id
+     *
+     * @return \BilletSimpleAlaska\Domain\Comment
+     */
+
+	public function find($id)
+	{
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id FROM t_comment WHERE com_id = ?';
+		$row = $this->getDb()->fetchAssoc($sql, array($id));
+
+		if ($row)
+			return $this->buildDomainObject($row);
+		else
+            throw new \Exception("Aucun commentaire ne correspond à l'identifiant n°" . $id);
+	}
+
+	/**
+     * Return a list of all Comments, sorted by date (most recent first).
+     *
+     * @return array A list of all Comments.
+     */
+
+	public function findAll()
+	{
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id FROM t_comment ORDER BY com_id DESC';
+		$result = $this->getDb()->fetchAll($sql);
+
+		// Convert query results to an array of domain objects
+		$comments = array();
+		foreach ($result AS $row)
+		{
+			$comId = $row['com_id'];
+			$comments[$comId] = $this->buildDomainObject($row);
+		}
+
+		return $comments;
+	}
+
+	/**
 	 * Return list of all comments for a ticket, sorted by date (most recent last)
 	 *
 	 * @param int $ticketId in the ticket id
@@ -79,6 +120,37 @@ class CommentDAO extends DAO
 			$comment->setId($id);
 		}
 	}
+
+	/**
+	 * Delete a comment
+	 *
+	 * @param integer id The comment id
+	 */
+
+	public function delete($id)
+	{
+		// Delete the comment
+		$this->getDb()->delete('t_comment', array('com_id' => $id));
+	}
+
+	/**
+     * Removes all comments for a Ticket
+     *
+     * @param $ticketId The id of the Ticket
+     */
+	
+    public function deleteAllByTicket($ticketId) {
+        $this->getDb()->delete('t_comment', array('tick_id' => $ticketId));
+    }
+
+    /**
+     * Removes all comments for a user
+     *
+     * @param integer $userId The id of the user
+     */
+    public function deleteAllByUser($userId) {
+        $this->getDb()->delete('t_comment', array('usr_id' => $userId));
+    }
 
 	/**
      * Creates a Comment object based on a DB row.

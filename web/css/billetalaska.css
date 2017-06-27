@@ -126,3 +126,13 @@ form
 {
 	margin-top : 40px;
 }
+
+/**
+ * Admin page specifications
+ */
+
+.adminTable
+{
+	margin-top : 20px;
+	margin-bottom : 20px;
+}

@@ -69,7 +69,7 @@ class Ticket
 	{
 		if (strlen($content) <= 200)
 		{
-			$ticket->setContent($content);
+			$this->setContent($content);
 		}
 		else
 		{

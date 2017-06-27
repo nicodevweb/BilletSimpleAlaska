@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
     <link href="{{ asset('/lib/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/css/billetalaska.css') }}" rel="stylesheet">
-    <title>Un Billet pour l'Alaska - {% block title %}{% endblock %}</title>
+    <title>Billet simple pour l'Alaska - {% block title %}{% endblock %}</title>
 </head>
 <body>
 	<div class="container">
@@ -19,13 +19,13 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ path('home') }}">Un Billet pour l'Alaska</a>
+                    <a class="navbar-brand" href="{{ path('home') }}">Billet simple pour l'Alaska</a>
                 </div>
                 <div class="collapse navbar-collapse" id="navbar-collapse-target">
                     <ul class="nav nav-inverse navbar-nav navbar-right">
                         {% if app.user and is_granted('ROLE_ADMIN') %}
                             <li class="{% if adminMenu is defined %}active{% endif %}">
-                                <a href="{{ path('home') }}"><span class="glyphicon glyphicon-cog"></span> Administration</a>
+                                <a href="{{ path('admin') }}"><span class="glyphicon glyphicon-cog"></span> Administration</a>
                             </li>
                         {% endif %}
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
@@ -57,7 +57,7 @@
 
 	<footer class="container">
 		<div class="row">
-			<p><a href="{{ path('home') }}">Un Billet pour l'Alaska</a> : une application développée par Nicolas GINDRE pour Openclassrooms.</p>
+			<p><a href="{{ path('home') }}">Billet simple pour l'Alaska</a> : une application développée par Nicolas GINDRE pour Openclassrooms.</p>
 			<p>Compétences utilisées : PHP (POO), Silex, Twig, Bootstrap</p>
 		</div>
 	</footer>
@@ -66,5 +66,19 @@
     <script src="{{ asset('/lib/jquery/jquery.min.js') }}"></script>
     <!-- JavaScript Boostrap plugin -->
     <script src="{{ asset('/lib/bootstrap/js/bootstrap.min.js') }}"></script>
+    <!-- TintMCE -->
+    <script src="{{ asset('/lib/tinymce/jquery.tinymce.min.js') }}"></script>
+    <script src="{{ asset('/lib/tinymce/tinymce.min.js') }}"></script>
+    <script>
+        tinymce.init({ 
+            selector : "textarea.editable",
+            valid_elements : '*[*]',
+            setup: function (editor) {
+                editor.on('change', function (e) {
+                    editor.save();
+                });
+            }
+        });
+    </script>
 </body>
 </html>

@@ -6,7 +6,7 @@
     <div class="row">
     	<article>
     		<h2>{{ ticket.title }}</h2>
-    		<p>{{ ticket.content|nl2br }}</p>
+    		<p>{{ ticket.content | raw }}</p>
     		<p class="align-right italic"><span class="bold">Mis en ligne le :</span> {{ ticket.dateCreation }}</p>
     	</article>
     </div>
@@ -16,7 +16,7 @@
         {% for comment in comments %}
             <legend><strong>{{ comment.author.username }}</strong> a dit : <span class="pull-right">{{ comment.dateCreation }}</legend>
             <p class="comment-content">
-                {{ comment.content }}<br>
+                {{ comment.content | nl2br }}<br>
                 <a href="" class="pull-right">Signaler un abus</a>
             </p>
         {% else %}
