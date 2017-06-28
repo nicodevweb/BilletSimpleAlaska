@@ -3,16 +3,23 @@
 {% block title %}Accueil{% endblock %}
 
 {% block content %}
-{% for ticket in tickets %}
-    <div class="row">
-    	<article>
-    		<h2><a href="{{ path('ticket', {'id': ticket.id}) }}">{{ ticket.title }}</a></h2>
-    		<p>{{ ticket.content[:600] | striptags ~ ' ...' }}</p>
-    		<p class="italic">
-    			<span class="bold">Mis en ligne :</span> le {{ ticket.dateCreation }}
-    			<span class="pull-right italic"><a href="{{ path('ticket', {'id': ticket.id}) }}">Lire la suite...</a></span>
-    		</p>
-    	</article>
+    <div id="pagination">
+        {% for ticket in tickets %}
+            <div class="row">
+            	<article>
+            		<h2><a href="{{ path('ticket', {'id': ticket.id}) }}">{{ ticket.title }}</a></h2>
+            		<p>{{ ticket.content[:600] | striptags ~ ' ...' }}</p>
+            		<p class="italic">
+            			<span class="bold">Mis en ligne :</span> le {{ ticket.dateCreation }}
+            			<span class="pull-right italic"><a href="{{ path('ticket', {'id': ticket.id}) }}">Lire la suite...</a></span>
+            		</p>
+            	</article>
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
+    <div class="row align-center">
+        <ul class="pagination">
+
+        </ul>
+    </div>
 {% endblock %}
