@@ -2,9 +2,11 @@
 <p class="comment-content">
     {{ comment.content | nl2br }}<br>
     <span class="pull-right">
-    	{% if comment.depth < 2 %}
-    		<a href="">Répondre</a>
-    	{% endif %}
+    	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+	    	{% if comment.depth < 2 %}
+	    		<a href="">Répondre</a>
+	    	{% endif %}
+	    {% endif %}
     	<a href="" class="comment_report">Signaler un abus</a>
     </span>
 </p>

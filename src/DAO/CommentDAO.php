@@ -97,7 +97,7 @@ class CommentDAO extends DAO
 	 *
 	 * @param bool $unset_children Verification to unset comments that are answers to others
 	 *
-	 * @return array of domain objects organized with their children
+	 * @return array of domain objects, if an object has a children, contains an array of domain object
 	 */
 
 	public function findAllWithChildren($ticketId, $unsetChildren = TRUE)
@@ -108,12 +108,15 @@ class CommentDAO extends DAO
 
 		foreach ($comments as $id => $comment)
 		{
+			// if the parent is an answer ...
 			if ($comment->getParentId() != 0)
 			{
+				// Then the parent is updated to set its child
 				$commentsByTicket[$comment->getParentId()]->setChildren($comment);
 
 				if ($unsetChildren)
 				{
+					// And the child is removed from parent's depth
 					unset($comments[$id]);
 				}
 			}
