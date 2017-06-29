@@ -51,25 +51,25 @@ insert into t_user values
 
 
 insert into t_comment values
-(1, 'Robert', 'Je peine à y croire ... Cette histoire est tellement bouleversante !', '2017-06-23 12:57:02', 3, 3, 0, 0);
+(1, 'Robert', 'Je peine à y croire ... Cette histoire est tellement bouleversante !', '2017-06-23 12:57:02', 3, 3, 0, 0, 0);
 
 insert into t_comment values
-(2, 'Charlotte', 'Cette histoire ... A la fois lyrique et onirique ... Je me perds encore et encore dans la passion transmise par l\'auteur. Des fois, je me surprends en train de rire, d\'autres fois, en train de pleurer ... Merci encore à l\'auteur, il m\'a fait découvrir un univers à la fois touchant et tellement sans merci !', '2017-06-23 13:01:23', 4, 5, 0, 0);
+(2, 'Charlotte', 'Cette histoire ... A la fois lyrique et onirique ... Je me perds encore et encore dans la passion transmise par l\'auteur. Des fois, je me surprends en train de rire, d\'autres fois, en train de pleurer ... Merci encore à l\'auteur, il m\'a fait découvrir un univers à la fois touchant et tellement sans merci !', '2017-06-23 13:01:23', 4, 5, 0, 0, 0);
 
 insert into t_comment values
-(3, 'Jacqueline', 'Un nouveau chapitre certainement plus intéressant que ceux qui le précèdent. L\'intrigue évolue, le suspens est total !', '2017-06-23 18:34:41', 4, 6, 0, 0);
+(3, 'Jacqueline', 'Un nouveau chapitre certainement plus intéressant que ceux qui le précèdent. L\'intrigue évolue, le suspens est total !', '2017-06-23 18:34:41', 4, 6, 0, 0, 0);
 
 insert into t_comment values
-(4, 'Michel', 'Maecenas imperdiet blandit scelerisque. In ac justo risus. Fusce dictum blandit consectetur.', '2017-06-23 22:24:09', 1, 2, 0, 0);
+(4, 'Michel', 'Maecenas imperdiet blandit scelerisque. In ac justo risus. Fusce dictum blandit consectetur.', '2017-06-23 22:24:09', 1, 2, 0, 0, 0);
 
 insert into t_comment values
-(5, 'Véronique', 'Vestibulum tincidunt sit amet massa vitae condimentum. Etiam pharetra odio lorem, ac imperdiet lorem ornare ac.', '2017-06-24 00:43:18', 4, 7, 0, 0);
+(5, 'Véronique', 'Vestibulum tincidunt sit amet massa vitae condimentum. Etiam pharetra odio lorem, ac imperdiet lorem ornare ac.', '2017-06-24 00:43:18', 4, 7, 0, 0, 0);
 
 insert into t_comment values
-(6, 'Charlotte', 'Mauris condimentum auctor lacus, malesuada maximus ipsum blandit vitae.', '2017-06-24 10:26:11', 1, 5, 8, 2);
+(6, 'Charlotte', 'Mauris condimentum auctor lacus, malesuada maximus ipsum blandit vitae.', '2017-06-24 10:26:11', 1, 5, 8, 2, 0);
 
 insert into t_comment values
-(7, 'Michel', 'Nam ultrices, lacus non vestibulum dictum, quam nulla tincidunt enim, in auctor sem nulla at est. Quisque pellentesque eleifend aliquet. In sed convallis erat. Morbi id vehicula nibh.', '2017-06-24 11:44:56', 1, 2, 0, 0);
+(7, 'Michel', 'Nam ultrices, lacus non vestibulum dictum, quam nulla tincidunt enim, in auctor sem nulla at est. Quisque pellentesque eleifend aliquet. In sed convallis erat. Morbi id vehicula nibh.', '2017-06-24 11:44:56', 1, 2, 0, 0, 0);
 
 insert into t_comment values
-(8, 'Lucas', 'Cras consectetur dignissim eros in elementum. Quisque iaculis congue lorem, lobortis rhoncus sapien tincidunt sed.', '2017-06-24 11:56:27', 1, 4, 4, 1);
+(8, 'Lucas', 'Cras consectetur dignissim eros in elementum. Quisque iaculis congue lorem, lobortis rhoncus sapien tincidunt sed.', '2017-06-24 11:56:27', 1, 4, 4, 1, 0);

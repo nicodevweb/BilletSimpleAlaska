@@ -9,7 +9,8 @@ class Comment
 			$dateCreation,
 			$parentId,
 			$children = [],
-			$depth;
+			$depth,
+			$nbReport;
 	/**
 	 *	@var \BilletSimpleAlaska\Ticket
 	 */
@@ -61,6 +62,11 @@ class Comment
 		return $this->depth;
 	}
 
+	public function getNbReport()
+	{
+		return $this->nbReport;
+	}
+
 	public function getTicket()
 	{
 		return $this->ticket;
@@ -108,6 +114,12 @@ class Comment
 	public function setDepth($depth)
 	{
 		$this->depth = $depth;
+		return $this;
+	}
+
+	public function setNbReport($nbReport)
+	{
+		$this->nbReport = $nbReport;
 		return $this;
 	}
 

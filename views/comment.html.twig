@@ -2,13 +2,31 @@
 <p class="comment-content">
     {{ comment.content | nl2br }}<br>
     <span class="pull-right">
-    	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-	    	{% if comment.depth < 2 %}
-	    		<a href="">Répondre</a>
-	    	{% endif %}
+    	{% if is_granted('IS_AUTHENTICATED_FULLY') and comment.depth < 2 %}
+	   		<a href="" class="comment_answer">Répondre</a>
 	    {% endif %}
-    	<a href="" class="comment_report">Signaler un abus</a>
-    </span>
+
+        <button type="button" class="btn btn-danger btn-xs" title="Supprimer" data-toggle="modal" data-target="#commentDialog{{ comment.id }}">
+        	Signaler un abus
+        </button>
+        <div class="modal fade" id="commentDialog{{ comment.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Confirmation requise</h4>
+                    </div>
+                    <div class="modal-body">
+                        Voulez-vous vraiment signaler ce commentaire ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        <a href="{{ path('report_comment_abuse', { 'id': comment.id }) }}" class="btn btn-danger">Confirmer</a>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </span><!-- /.links container -->
 </p>
 
 <div class="comment_anwser">

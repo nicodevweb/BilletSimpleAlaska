@@ -28,7 +28,7 @@ class CommentDAO extends DAO
 
 	public function find($id)
 	{
-		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id FROM t_comment WHERE com_id = ?';
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id, parent_id, depth, com_nb_report FROM t_comment WHERE com_id = ?';
 		$row = $this->getDb()->fetchAssoc($sql, array($id));
 
 		if ($row)
@@ -45,7 +45,7 @@ class CommentDAO extends DAO
 
 	public function findAll()
 	{
-		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id FROM t_comment ORDER BY com_id DESC';
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id, parent_id, depth, com_nb_report FROM t_comment ORDER BY com_id DESC';
 		$result = $this->getDb()->fetchAll($sql);
 
 		// Convert query results to an array of domain objects
@@ -72,7 +72,7 @@ class CommentDAO extends DAO
 		// The associated ticket is retrived only once
 		$ticket = $this->ticketDAO->find($ticketId);
 
-		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id, parent_id, depth FROM t_comment WHERE tick_id = ? ORDER BY com_id DESC';
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id, parent_id, depth, com_nb_report FROM t_comment WHERE tick_id = ? ORDER BY com_id DESC';
 		$result = $this->getDb()->fetchAll($sql, array($ticketId));
 
 		// Convert query result in an array of Domain objects
@@ -88,6 +88,28 @@ class CommentDAO extends DAO
 		}
 
 		return $commentsByTicket;
+	}
+
+	/**
+	 * Return list of all comments reported, ordered by number of times it has been reported (Most reported first)
+	 *
+	 * @return array A list of all comments reported
+	 */
+
+	public function findAllByNbReport()
+	{
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id, parent_id, depth, com_nb_report FROM t_comment WHERE com_nb_report > 0 ORDER BY com_nb_report DESC';
+		$result = $this->getDb()->fetchAll($sql);
+
+		// Convert query results to an array of domain objects
+		$comments = array();
+		foreach ($result AS $row)
+		{
+			$comId = $row['com_id'];
+			$comments[$comId] = $this->buildDomainObject($row);
+		}
+
+		return $comments;
 	}
 
 	/**
@@ -139,7 +161,8 @@ class CommentDAO extends DAO
 			'com_author' => $comment->getAuthor()->getUsername(),
 			'com_content' => $comment->getContent(),
 			'parent_id' => $comment->getParentId(),
-			'depth' => $comment->getDepth()
+			'depth' => $comment->getDepth(),
+			'com_nb_report' => $comment->getNbReport()
 		);
 
 		if ($comment->getId())
@@ -189,6 +212,21 @@ class CommentDAO extends DAO
         $this->getDb()->delete('t_comment', array('usr_id' => $userId));
     }
 
+    /**
+     * Reports a comment
+     *
+     * @param $id The comment id
+     */
+
+    public function reportComment($commentId)
+    {
+    	$comment = $this->find($commentId);
+    	$nbReport = $comment-> getNbReport() + 1;
+    	$comment->setNbReport($nbReport);
+
+    	$this->getDb()->update('t_comment', array('com_nb_report' => $comment->getNbReport()), array('com_id' => $commentId));
+    }
+
 	/**
      * Creates a Comment object based on a DB row.
      *
@@ -204,6 +242,7 @@ class CommentDAO extends DAO
 		$comment->setDateCreation($row['date_creation']);
 		$comment->setParentId($row['parent_id']);
 		$comment->setDepth($row['depth']);
+		$comment->setNbReport($row['com_nb_report']);
 		
 		if (array_key_exists('tick_id', $row))
 		{

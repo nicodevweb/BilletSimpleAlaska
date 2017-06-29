@@ -67,11 +67,13 @@ $app->get('/login', function (Request $request) use ($app) {
 $app->get('/admin', function () use ($app) {
     $tickets = $app['dao.ticket']->findAll();
     $comments = $app['dao.comment']->findAll();
+    $commentsReported = $app['dao.comment']->findAllByNbReport();
     $users = $app['dao.user']->findAll();
 
     return $app['twig']->render('admin.html.twig', array(
         'tickets' => $tickets,
         'comments' => $comments,
+        'commentsReported' => $commentsReported,
         'users' => $users
     ));
 })->bind('admin');
@@ -148,6 +150,15 @@ $app->get('/admin/comment/{id}/delete', function($id, Request $request) use ($ap
     // Redirect to admin home page
     return $app->redirect($app['url_generator']->generate('admin'));
 })->bind('admin_comment_delete');
+
+// Report a comment abuse
+$app->get('/comment/{id}/report', function($id, Request $request) use ($app) {
+    $app['dao.comment']->reportComment($id);
+    $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été signalé. Merci de votre retour.');
+
+    // Redirect to admin home page
+    return $app->redirect($app['url_generator']->generate('home'));
+})->bind('report_comment_abuse');
 
 // Add a user
 $app->match('/admin/user/add', function(Request $request) use ($app) {
