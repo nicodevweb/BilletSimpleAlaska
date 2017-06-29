@@ -46,7 +46,7 @@ $app->match('/ticket/{id}', function ($id, Request $request) use ($app) {
     	$commentFormView = $commentForm->createView();
     }
     // Add comment view
-    $comments = $app['dao.comment']->findAllByTicket($id);
+    $comments = $app['dao.comment']->findAllWithChildren($id);
 
 	return $app['twig']->render('ticket.html.twig', array(
 		'ticket' => $ticket,

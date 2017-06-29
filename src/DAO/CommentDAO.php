@@ -72,11 +72,11 @@ class CommentDAO extends DAO
 		// The associated ticket is retrived only once
 		$ticket = $this->ticketDAO->find($ticketId);
 
-		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id FROM t_comment WHERE tick_id = ? ORDER BY com_id DESC';
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id, parent_id, depth FROM t_comment WHERE tick_id = ? ORDER BY com_id DESC';
 		$result = $this->getDb()->fetchAll($sql, array($ticketId));
 
 		// Convert query result in an array of Domain objects
-		$comments = array();
+		$commentsByTicket = array();
 
 		foreach ($result as $row)
 		{
@@ -84,7 +84,39 @@ class CommentDAO extends DAO
 			$comment = $this->buildDomainObject($row);
 			// The associated ticket is defined for the constructed comment
 			$comment->setTicket($ticket);
-			$comments[$comId] = $comment;
+			$commentsByTicket[$comId] = $comment;
+		}
+
+		return $commentsByTicket;
+	}
+
+	/**
+	 * Return comments with their anwsers associated
+	 * 
+	 * @param $ticketId The Ticket id
+	 *
+	 * @param bool $unset_children Verification to unset comments that are answers to others
+	 *
+	 * @return array of domain objects organized with their children
+	 */
+
+	public function findAllWithChildren($ticketId, $unsetChildren = TRUE)
+	{
+		// 2 vars are needed
+		// @var $commentsByTicket will never be modified, whereas comments will
+		$comments = $commentsByTicket = $this->findAllByTicket($ticketId);
+
+		foreach ($comments as $id => $comment)
+		{
+			if ($comment->getParentId() != 0)
+			{
+				$commentsByTicket[$comment->getParentId()]->setChildren($comment);
+
+				if ($unsetChildren)
+				{
+					unset($comments[$id]);
+				}
+			}
 		}
 
 		return $comments;
@@ -102,7 +134,9 @@ class CommentDAO extends DAO
 			'tick_id' => $comment->getTicket()->getId(),
 			'usr_id' => $comment->getAuthor()->getId(),
 			'com_author' => $comment->getAuthor()->getUsername(),
-			'com_content' => $comment->getContent()
+			'com_content' => $comment->getContent(),
+			'parent_id' => $comment->getParentId(),
+			'depth' => $comment->getDepth()
 		);
 
 		if ($comment->getId())
@@ -165,6 +199,8 @@ class CommentDAO extends DAO
 		$comment->setId($row['com_id']);
 		$comment->setContent($row['com_content']);
 		$comment->setDateCreation($row['date_creation']);
+		$comment->setParentId($row['parent_id']);
+		$comment->setDepth($row['depth']);
 		
 		if (array_key_exists('tick_id', $row))
 		{

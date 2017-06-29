@@ -14,11 +14,7 @@
     <div class="row">
         <div class="well">
         {% for comment in comments %}
-            <legend><strong>{{ comment.author.username }}</strong> a dit : <span class="pull-right">{{ comment.dateCreation }}</legend>
-            <p class="comment-content">
-                {{ comment.content | nl2br }}<br>
-                <a href="" class="pull-right">Signaler un abus</a>
-            </p>
+            {{ include("comment.html.twig") }}
         {% else %}
             <p class="no-comment">Aucun commentaire n'est disponible pour le moment.</p>
         {% endfor %}

@@ -6,7 +6,10 @@ class Comment
 {
 	private	$id,
 			$content,
-			$dateCreation;
+			$dateCreation,
+			$parentId,
+			$children = [],
+			$depth;
 	/**
 	 *	@var \BilletSimpleAlaska\Ticket
 	 */
@@ -43,6 +46,21 @@ class Comment
 		return $this->dateCreation;
 	}
 
+	public function getParentId()
+	{
+		return $this->parentId;
+	}
+
+	public function getChildren()
+	{
+		return $this->children;
+	}
+
+	public function getDepth()
+	{
+		return $this->depth;
+	}
+
 	public function getTicket()
 	{
 		return $this->ticket;
@@ -72,6 +90,24 @@ class Comment
 	public function setDateCreation($dateCreation)
 	{
 		$this->dateCreation = $dateCreation;
+		return $this;
+	}
+
+	public function setParentId($parentId)
+	{
+		$this->parentId = $parentId;
+		return $this;
+	}
+
+	public function setChildren(Comment $child)
+	{
+		$this->children[] = $child;
+		return $this;
+	}
+
+	public function setDepth($depth)
+	{
+		$this->depth = $depth;
 		return $this;
 	}
 
