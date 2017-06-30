@@ -153,11 +153,12 @@ $app->get('/admin/comment/{id}/delete', function($id, Request $request) use ($ap
 
 // Report a comment abuse
 $app->get('/comment/{id}/report', function($id, Request $request) use ($app) {
+    $comment = $app['dao.comment']->find($id);
     $app['dao.comment']->reportComment($id);
     $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été signalé. Merci de votre retour.');
 
     // Redirect to admin home page
-    return $app->redirect($app['url_generator']->generate('home'));
+    return $app->redirect($app['url_generator']->generate('ticket', array('id' => $comment->getTicket()->getId())));
 })->bind('report_comment_abuse');
 
 // Add a user
