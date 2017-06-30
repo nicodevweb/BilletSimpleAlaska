@@ -8,7 +8,7 @@
             {{ flashMessage }}
         </div>
     {% endfor %}
-    
+
     <div class="row">
     	<article>
     		<h2>{{ ticket.title }}</h2>
@@ -40,11 +40,6 @@
                     <input type="submit" class="btn btn-primary" value="Publier le commentaire" />
                 </div>
             {{ form_end(commentForm) }}
-            {% for flashMessage in app.session.flashbag.get('success') %}
-                <div class="alert alert-success">
-                    {{ flashMessage }}
-                </div>
-            {% endfor %}
         {% else %}
             <a href="{{ path('login') }} ">Se connecter</a> pour ajouter un commentaire.
         {% endif %}
