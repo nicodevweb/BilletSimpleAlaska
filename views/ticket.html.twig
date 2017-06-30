@@ -3,6 +3,12 @@
 {% block title %}{{ ticket.title }}{% endblock %}
 
 {% block content %}
+    {% for flashMessage in app.session.flashbag.get('success') %}
+        <div class="alert alert-success">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    
     <div class="row">
     	<article>
     		<h2>{{ ticket.title }}</h2>
