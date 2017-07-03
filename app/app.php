@@ -2,6 +2,7 @@
 
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\ExceptionHandler;
+use Symfony\Component\HttpFoundation\Request;
 
 // Register global error and exception handlers
 ErrorHandler::register();
@@ -45,6 +46,11 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
 $app->register(new Silex\Provider\FormServiceProvider());
 $app->register(new Silex\Provider\LocaleServiceProvider());
 $app->register(new Silex\Provider\TranslationServiceProvider());
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.logfile' => __DIR__.'/../var/logs/billetalaska.log',
+    'monolog.name' => 'BilletSimpleAlaska',
+    'monolog.level' => $app['monolog.level']
+));
 
 // Register services.
 $app['dao.ticket'] = function ($app) {
@@ -61,3 +67,21 @@ $app['dao.comment'] = function ($app) {
 $app['dao.user'] = function ($app) {
 	return new BilletSimpleAlaska\DAO\UserDAO($app['db']);
 };
+
+// Register error handler
+$app->error(function (\Exception $e, Request $request, $code) use ($app) {
+	switch ($code)
+	{
+		case 403:
+			$message = 'Accès non autorisé.';
+			break;
+
+		case 404:
+			$message = 'La page à laquelle vous souhaitez accéder n\'existe pas.';
+			break;
+		default:
+			$message = 'Un problème est survenu, réessayez plus tard.';
+	}
+
+	return $app['twig']->render('error.html.twig', array('message' => $message));
+});
