@@ -169,192 +169,291 @@ $app->match('/register', function(Request $request) use ($app) {
 
 // Administration page
 $app->get('/admin', function () use ($app) {
-    $tickets = $app['dao.ticket']->findAll();
-    $comments = $app['dao.comment']->findAll();
-    $commentsReported = $app['dao.comment']->findAllByNbReport();
-    $users = $app['dao.user']->findAll();
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
+    {
+        $tickets = $app['dao.ticket']->findAll();
+        $comments = $app['dao.comment']->findAll();
+        $commentsReported = $app['dao.comment']->findAllByNbReport();
+        $users = $app['dao.user']->findAll();
 
-    return $app['twig']->render('admin.html.twig', array(
-        'tickets' => $tickets,
-        'comments' => $comments,
-        'commentsReported' => $commentsReported,
-        'users' => $users
-    ));
+        return $app['twig']->render('admin.html.twig', array(
+            'tickets' => $tickets,
+            'comments' => $comments,
+            'commentsReported' => $commentsReported,
+            'users' => $users
+        ));
+    }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
+
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin');
 
 // Add a new ticket
 $app->match('/admin/ticket/add', function(Request $request) use ($app) {
-    $ticket = new Ticket();
-    $ticketForm = $app['form.factory']->create(TicketType::class, $ticket);
-    $ticketForm->handleRequest($request);
-
-    if ($ticketForm->isSubmitted() && $ticketForm->isValid())
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
     {
-        $app['dao.ticket']->save($ticket);
-        $app['session']->getFlashBag()->add('success', 'Le billet a bien été créé.');
-    }
+        $ticket = new Ticket();
+        $ticketForm = $app['form.factory']->create(TicketType::class, $ticket);
+        $ticketForm->handleRequest($request);
 
-    return $app['twig']->render('ticket_form.html.twig', array(
-        'title' => 'Nouveau billet',
-        'ticketForm' => $ticketForm->createView()));
+        if ($ticketForm->isSubmitted() && $ticketForm->isValid())
+        {
+            $app['dao.ticket']->save($ticket);
+            $app['session']->getFlashBag()->add('success', 'Le billet a bien été créé.');
+        }
+
+        return $app['twig']->render('ticket_form.html.twig', array(
+            'title' => 'Nouveau billet',
+            'ticketForm' => $ticketForm->createView()));
+    }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
+
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin_ticket_add');
 
 // Edit an existing ticket
 $app->match('/admin/ticket/{id}/edit', function($id, Request $request) use ($app) {
-    $ticket = $app['dao.ticket']->find($id);
-    $ticketForm = $app['form.factory']->create(TicketType::class, $ticket);
-    $ticketForm->handleRequest($request);
-
-    if ($ticketForm->isSubmitted() && $ticketForm->isValid())
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
     {
-        $app['dao.ticket']->save($ticket);
-        $app['session']->getFlashBag()->add('success', 'Le billet a bien été mis à jour.');
-    }
+        $ticket = $app['dao.ticket']->find($id);
+        $ticketForm = $app['form.factory']->create(TicketType::class, $ticket);
+        $ticketForm->handleRequest($request);
 
-    return $app['twig']->render('ticket_form.html.twig', array(
-        'title' => 'Edition du billet',
-        'ticketForm' => $ticketForm->createView()));
+        if ($ticketForm->isSubmitted() && $ticketForm->isValid())
+        {
+            $app['dao.ticket']->save($ticket);
+            $app['session']->getFlashBag()->add('success', 'Le billet a bien été mis à jour.');
+        }
+
+        return $app['twig']->render('ticket_form.html.twig', array(
+            'title' => 'Edition du billet',
+            'ticketForm' => $ticketForm->createView()));
+    }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
+
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin_ticket_edit');
 
 // Remove a ticket
 $app->get('/admin/ticket/{id}/delete', function($id, Request $request) use ($app) {
-    // Delete all associated comments
-    $app['dao.comment']->deleteAllByTicket($id);
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
+    {
+        // Delete all associated comments
+        $app['dao.comment']->deleteAllByTicket($id);
 
-    // Delete the ticket
-    $app['dao.ticket']->delete($id);
-    $app['session']->getFlashBag()->add('success', 'Le billet a bien été supprimé.');
+        // Delete the ticket
+        $app['dao.ticket']->delete($id);
+        $app['session']->getFlashBag()->add('success', 'Le billet a bien été supprimé.');
 
-    // Redirect to admin home page
-    return $app->redirect($app['url_generator']->generate('admin'));
+        // Redirect to admin home page
+        return $app->redirect($app['url_generator']->generate('admin'));
+    }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
+
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin_ticket_delete');
 
 // Edit an existing comment
 $app->match('/admin/comment/{id}/edit', function($id, Request $request) use ($app) {
-    $comment = $app['dao.comment']->find($id);
-    $commentForm = $app['form.factory']->create(CommentType::class, $comment);
-    $commentForm->handleRequest($request);
-
-    if ($commentForm->isSubmitted() && $commentForm->isValid())
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
     {
-        $app['dao.comment']->save($comment);
-        $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été mis à jour.');
-    }
+        $comment = $app['dao.comment']->find($id);
+        $commentForm = $app['form.factory']->create(CommentType::class, $comment);
+        $commentForm->handleRequest($request);
 
-    return $app['twig']->render('comment_form.html.twig', array(
-        'title' => 'Edition du commentaire',
-        'commentForm' => $commentForm->createView()));
+        if ($commentForm->isSubmitted() && $commentForm->isValid())
+        {
+            $app['dao.comment']->save($comment);
+            $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été mis à jour.');
+        }
+
+        return $app['twig']->render('comment_form.html.twig', array(
+            'title' => 'Edition du commentaire',
+            'commentForm' => $commentForm->createView()));
+    }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
+
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin_comment_edit');
 
 // Reinitialize number of reports for a comment
 $app->get('/admin/comment/{id}/reinit', function($id, Request $request) use ($app) {
-    // Get comment object then put number of report to 0
-    $comment = $app['dao.comment']->find($id);
-    $comment->setNbReport(0);
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
+    {
+        // Get comment object then put number of report to 0
+        $comment = $app['dao.comment']->find($id);
+        $comment->setNbReport(0);
 
-    // Then update the comment line in db
-    $app['dao.comment']->save($comment);
-    $app['session']->getFlashBag()->add('success', 'Le commentaire n\'est plus signalé.');
+        // Then update the comment line in db
+        $app['dao.comment']->save($comment);
+        $app['session']->getFlashBag()->add('success', 'Le commentaire n\'est plus signalé.');
 
-    // Redirect to admin home page
-    return $app->redirect($app['url_generator']->generate('admin'));
+        // Redirect to admin home page
+        return $app->redirect($app['url_generator']->generate('admin'));
+    }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
+
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin_comment_reinit');
 
 // Remove a comment and its children
 $app->get('/admin/comment/{id}/delete', function($id, Request $request) use ($app) {
-    // Get comment children with current comment id
-    $comment = $app['dao.comment']->find($id);
-    // Get its children
-    $children = $app['dao.comment']->findChildren($id);
-
-    if ($children)
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
     {
-        // Get parent's children and delete them
-        foreach ($children as $child)
+        // Get comment children with current comment id
+        $comment = $app['dao.comment']->find($id);
+        // Get its children
+        $children = $app['dao.comment']->findChildren($id);
+
+        if ($children)
         {
-            // Get child's children and delete them
-            $childrenChildren = $app['dao.comment']->findChildren($child->getId());
-
-            if ($childrenChildren)
+            // Get parent's children and delete them
+            foreach ($children as $child)
             {
-                foreach ($childrenChildren as $childrenChild)
+                // Get child's children and delete them
+                $childrenChildren = $app['dao.comment']->findChildren($child->getId());
+
+                if ($childrenChildren)
                 {
-                    $app['dao.comment']->delete($childrenChild->getId());
+                    foreach ($childrenChildren as $childrenChild)
+                    {
+                        $app['dao.comment']->delete($childrenChild->getId());
+                    }
                 }
+
+                $app['dao.comment']->delete($child->getId());
             }
-
-            $app['dao.comment']->delete($child->getId());
         }
+
+        // Then, current comment is deleted
+        $app['dao.comment']->delete($id);
+        $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été supprimé.');
+
+        // Redirect to admin home page
+        return $app->redirect($app['url_generator']->generate('admin'));
     }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
 
-
-    // Then, current comment is deleted
-    $app['dao.comment']->delete($id);
-    $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été supprimé.');
-
-    // Redirect to admin home page
-    return $app->redirect($app['url_generator']->generate('admin'));
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin_comment_delete');
 
 // Add a user
 $app->match('/admin/user/add', function(Request $request) use ($app) {
-    $user = new User();
-    $userForm = $app['form.factory']->create(UserType::class, $user);
-    $userForm->handleRequest($request);
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
+    {
+        $user = new User();
+        $userForm = $app['form.factory']->create(UserType::class, $user);
+        $userForm->handleRequest($request);
 
-    if ($userForm->isSubmitted() && $userForm->isValid()) {
-        // generate a random salt value
-        $salt = substr(md5(time()), 0, 23);
-        $user->setSalt($salt);
-        $plainPassword = $user->getPassword();
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+            // generate a random salt value
+            $salt = substr(md5(time()), 0, 23);
+            $user->setSalt($salt);
+            $plainPassword = $user->getPassword();
 
-        // find the default encoder
-        $encoder = $app['security.encoder.bcrypt'];
+            // find the default encoder
+            $encoder = $app['security.encoder.bcrypt'];
 
-        // compute the encoded password
-        $password = $encoder->encodePassword($plainPassword, $user->getSalt());
-        $user->setPassword($password); 
-        $app['dao.user']->save($user);
-        $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été créé.');
+            // compute the encoded password
+            $password = $encoder->encodePassword($plainPassword, $user->getSalt());
+            $user->setPassword($password); 
+            $app['dao.user']->save($user);
+            $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été créé.');
+        }
+
+        return $app['twig']->render('user_form.html.twig', array(
+            'title' => 'Nouvel utilisateur',
+            'userForm' => $userForm->createView()));
     }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
 
-    return $app['twig']->render('user_form.html.twig', array(
-        'title' => 'Nouvel utilisateur',
-        'userForm' => $userForm->createView()));
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin_user_add');
 
 // Edit an existing user
 $app->match('/admin/user/{id}/edit', function($id, Request $request) use ($app) {
-    $user = $app['dao.user']->find($id);
-    $userForm = $app['form.factory']->create(UserType::class, $user);
-    $userForm->handleRequest($request);
-    if ($userForm->isSubmitted() && $userForm->isValid()) {
-        $plainPassword = $user->getPassword();
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
+    {
+        $user = $app['dao.user']->find($id);
+        $userForm = $app['form.factory']->create(UserType::class, $user);
+        $userForm->handleRequest($request);
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+            $plainPassword = $user->getPassword();
 
-        // find the encoder for the user
-        $encoder = $app['security.encoder_factory']->getEncoder($user);
+            // find the encoder for the user
+            $encoder = $app['security.encoder_factory']->getEncoder($user);
 
-        // compute the encoded password
-        $password = $encoder->encodePassword($plainPassword, $user->getSalt());
-        $user->setPassword($password); 
-        $app['dao.user']->save($user);
-        $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été modifié.');
+            // compute the encoded password
+            $password = $encoder->encodePassword($plainPassword, $user->getSalt());
+            $user->setPassword($password); 
+            $app['dao.user']->save($user);
+            $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été modifié.');
+        }
+
+        return $app['twig']->render('user_form.html.twig', array(
+            'title' => 'Edition du profil utilisateur',
+            'userForm' => $userForm->createView()));
     }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
 
-    return $app['twig']->render('user_form.html.twig', array(
-        'title' => 'Edition du profil utilisateur',
-        'userForm' => $userForm->createView()));
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin_user_edit');
 
 // Remove a user
 $app->get('/admin/user/{id}/delete', function($id, Request $request) use ($app) {
-    // Delete all associated comments
-    $app['dao.comment']->deleteAllByUser($id);
+    // Access to this page can be only granted to admin role
+    if ($app['security.authorization_checker']->isGranted('ROLE_ADMIN'))
+    {
+        // Delete all associated comments
+        $app['dao.comment']->deleteAllByUser($id);
 
-    // Delete the user
-    $app['dao.user']->delete($id);
-    $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été supprimé.');
+        // Delete the user
+        $app['dao.user']->delete($id);
+        $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été supprimé.');
 
-    // Redirect to admin home page
-    return $app->redirect($app['url_generator']->generate('admin'));
+        // Redirect to admin home page
+        return $app->redirect($app['url_generator']->generate('admin'));
+    }
+    else
+    {
+        $message = 'Vous n\'avez pas accès à cette page';
+
+        return $app['twig']->render('error.html.twig', array('message' => $message));
+    }
 })->bind('admin_user_delete');
