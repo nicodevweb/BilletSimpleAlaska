@@ -38,6 +38,31 @@ class CommentDAO extends DAO
 	}
 
 	/**
+     * Return Comment children matching the supplied id.
+     *
+     * @param integer $id The parent comment id
+     *
+     * @return array A list of Domain Objects
+     */
+
+	public function findChildren($parentId)
+	{
+		$sql = 'SELECT com_id, com_author, com_content, DATE_FORMAT(com_date, "%d/%m/%Y à %Hh%i") AS date_creation, tick_id, usr_id, parent_id, depth, com_nb_report FROM t_comment WHERE parent_id = ?';
+		$result = $this->getDb()->fetchAll($sql, array($parentId));
+
+		// Convert query results to an array of domain objects
+		$comments = array();
+		foreach ($result AS $row)
+		{
+			$comId = $row['com_id'];
+			$comments[$comId] = $this->buildDomainObject($row);
+		}
+
+		return $comments;
+	}
+
+
+	/**
      * Return a list of all Comments, sorted by date (most recent first).
      *
      * @return array A list of all Comments.
@@ -54,6 +79,41 @@ class CommentDAO extends DAO
 		{
 			$comId = $row['com_id'];
 			$comments[$comId] = $this->buildDomainObject($row);
+		}
+
+		return $comments;
+	}
+
+	/**
+	 * Return comments with their anwsers associated
+	 * 
+	 * @param $ticketId The Ticket id
+	 *
+	 * @param bool $unset_children Verification to unset comments that are answers to others
+	 *
+	 * @return array of domain objects, if an object has a children, contains an array of domain object
+	 */
+
+	public function findAllWithChildren($ticketId, $unsetChildren = TRUE)
+	{
+		// 2 vars are needed
+		// @var $commentsByTicket will never be modified, whereas comments will
+		$comments = $commentsByTicket = $this->findAllByTicket($ticketId);
+
+		foreach ($comments as $id => $comment)
+		{
+			// if the parent is an answer ...
+			if ($comment->getParentId() != 0)
+			{
+				// Then the parent is updated to set its child
+				$commentsByTicket[$comment->getParentId()]->setChildren($comment);
+
+				if ($unsetChildren)
+				{
+					// And the child is removed from parent's depth
+					unset($comments[$id]);
+				}
+			}
 		}
 
 		return $comments;
@@ -113,41 +173,6 @@ class CommentDAO extends DAO
 	}
 
 	/**
-	 * Return comments with their anwsers associated
-	 * 
-	 * @param $ticketId The Ticket id
-	 *
-	 * @param bool $unset_children Verification to unset comments that are answers to others
-	 *
-	 * @return array of domain objects, if an object has a children, contains an array of domain object
-	 */
-
-	public function findAllWithChildren($ticketId, $unsetChildren = TRUE)
-	{
-		// 2 vars are needed
-		// @var $commentsByTicket will never be modified, whereas comments will
-		$comments = $commentsByTicket = $this->findAllByTicket($ticketId);
-
-		foreach ($comments as $id => $comment)
-		{
-			// if the parent is an answer ...
-			if ($comment->getParentId() != 0)
-			{
-				// Then the parent is updated to set its child
-				$commentsByTicket[$comment->getParentId()]->setChildren($comment);
-
-				if ($unsetChildren)
-				{
-					// And the child is removed from parent's depth
-					unset($comments[$id]);
-				}
-			}
-		}
-
-		return $comments;
-	}
-
-	/**
      * Saves a comment into the database.
      *
      * @param \BilletSimpleAlaska\Domain\Comment $comment The comment to save
@@ -160,8 +185,8 @@ class CommentDAO extends DAO
 			'usr_id' => $comment->getAuthor()->getId(),
 			'com_author' => $comment->getAuthor()->getUsername(),
 			'com_content' => $comment->getContent(),
-			'parent_id' => $comment->getParentId(),
-			'depth' => $comment->getDepth(),
+			'parent_id' => ($comment->getParentId() !== NULL) ? $comment->getParentId() : 0,
+			'depth' => ($comment->getDepth() !== NULL) ? $comment->getDepth() : 0,
 			'com_nb_report' => $comment->getNbReport()
 		);
 

@@ -1,0 +1,59 @@
+{% extends 'layout.html.twig' %}
+{% set adminMenu = true %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <h2 class="text-center">{{ block('title') }}</h2>
+    {% for flashMessage in app.session.flashbag.get('success') %}
+        <div class="alert alert-success">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% if form_errors(registerForm.password.first) %}
+        <div class="alert alert-danger">
+            {{ form_errors(registerForm.password.first) }}
+        </div>
+    {% endif %}
+
+    <div class="well">
+    {{ form_start(registerForm, { 'attr': {'class': 'form-horizontal'} }) }}
+        <div class="form-group">
+            {{ form_label(registerForm.username, 'Identifiant', { 'label_attr':  {
+                'class': 'col-sm-5 control-label'
+            }}) }}
+            <div class="col-sm-4">
+                {{ form_errors(registerForm.username) }}
+                {{ form_widget(registerForm.username, { 'attr':  {
+                    'class': 'form-control'
+                }}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(registerForm.password.first, null, { 'label_attr':  {
+                'class': 'col-sm-5 control-label'
+            }}) }}
+            <div class="col-sm-4">
+                {{ form_widget(registerForm.password.first, { 'attr':  {
+                    'class': 'form-control'
+                }}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(registerForm.password.second, null, { 'label_attr':  {
+                'class': 'col-sm-5 control-label'
+            }}) }}
+            <div class="col-sm-4">
+                {{ form_widget(registerForm.password.second, { 'attr':  {
+                    'class': 'form-control'
+                }}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-5 col-sm-3">
+                <input type="submit" class="btn btn-primary" value="Sauvegarder" />
+            </div>
+        </div>
+    {{ form_end(registerForm) }}
+    </div>
+{% endblock %}

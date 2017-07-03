@@ -1,9 +1,9 @@
 <legend><strong>{{ comment.author.username }}</strong> a dit : <span class="pull-right">{{ comment.dateCreation }}</span></legend>
 <p class="comment-content">
     {{ comment.content | nl2br }}<br>
-    <span class="pull-right">
+    <span class="pull-right" id="monAccordeon">
     	{% if is_granted('IS_AUTHENTICATED_FULLY') and comment.depth < 2 %}
-	   		<a href="" class="comment_answer">Répondre</a>
+	   		<a href="#formAnswer{{ comment.id }}" class="comment_answer" data-parent="monAccordeon" data-toggle="collapse">Répondre</a>
 	    {% endif %}
 
         <button type="button" class="btn btn-danger btn-xs" title="Supprimer" data-toggle="modal" data-target="#commentDialog{{ comment.id }}">
@@ -28,6 +28,19 @@
         </div><!-- /.modal -->
     </span><!-- /.links container -->
 </p>
+
+<div id="formAnswer{{ comment.id }}" class="collapse container">
+    <div class="comment_answer_form">
+        <form class="form-horizontal" action="{{ path('answer_treatment', {'ticketId': ticket.id, 'parentId': comment.id}) }}" method="POST">
+            <div class="form-group col-md-8">
+                <textarea class="form-control" name="answerContent" rows="1" placeholder="Répondre au commentaire"></textarea>
+            </div>
+            <div class="form-group col-md-4 center-block">
+                <input type="submit" class="btn btn-primary center-block" value="Publier le commentaire" />
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="comment_anwser">
 	{% for comment in comment.children %}

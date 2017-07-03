@@ -7,6 +7,7 @@ use BilletSimpleAlaska\Domain\User;
 use BilletSimpleAlaska\Form\Type\CommentType;
 use BilletSimpleAlaska\Form\Type\TicketType;
 use BilletSimpleAlaska\Form\Type\UserType;
+use BilletSimpleAlaska\Form\Type\RegisterType;
 
 // Home page
 $app->get('/', function () use ($app) {
@@ -29,7 +30,9 @@ $app->get('/', function () use ($app) {
 // $app->match deals both GET and POST requests ($app->get deals only GET requests)
 $app->match('/ticket/{id}', function ($id, Request $request) use ($app) {
     $ticket = $app['dao.ticket']->find($id);
+    $comments = $app['dao.comment']->findAllWithChildren($id);
     $commentFormView = NULL; // If no user connected, form view is NULL
+    $answerFormView = NULL; // If no user connected, answer form is NULL
 
     if ($app['security.authorization_checker']->isGranted('IS_AUTHENTICATED_FULLY'))
     {
@@ -38,26 +41,31 @@ $app->match('/ticket/{id}', function ($id, Request $request) use ($app) {
     	$comment = new Comment();
     	$comment->setTicket($ticket);
 
+        // It is a totally new comment so nb report is set to 0
+        $comment->setNbReport(0);
+
     	// User object is then assigned to the new Comment
     	$user = $app['user'];
     	$comment->setAuthor($user);
 
     	// The comment form is created and is submitted by handleRequest method
     	$commentForm = $app['form.factory']->create(CommentType::class, $comment);
-    	$commentForm ->handleRequest($request);
+    	$commentForm->handleRequest($request);
 
     	// If the comment form is submitted and its data valid, CommentDAO is used to save comment in db, and a success message is created
     	if ($commentForm->isSubmitted() AND $commentForm->isValid())
     	{
     		$app['dao.comment']->save($comment);
     		$app['session']->getFlashBag()->add('success', 'Votre commentaire a été ajouté avec succès.');
+
+            // Redirection to the ticket page to refresh the page and see the comment add
+            return $app->redirect($app['url_generator']->generate('ticket', array('id' => $comment->getTicket()->getId())));
     	}
 
     	$commentFormView = $commentForm->createView();
     }
-    // Add comment view
-    $comments = $app['dao.comment']->findAllWithChildren($id);
 
+    // Add comment view
 	return $app['twig']->render('ticket.html.twig', array(
 		'ticket' => $ticket,
 		'comments' => $comments,
@@ -65,13 +73,39 @@ $app->match('/ticket/{id}', function ($id, Request $request) use ($app) {
 	));
 })->bind('ticket');
 
+// Comment answer treatment
+$app->match('/commentAnswer/{ticketId}/{parentId}', function($ticketId, $parentId, Request $request) use ($app) {
+    $answerContent = (isset($_POST['answerContent'])) ? $_POST['answerContent'] : '';
+    $ticket = $app['dao.ticket']->find($ticketId);
+    $author = $app['user'];
+    $parent = $app['dao.comment']->find($parentId);
+
+
+    if ($answerContent !== '')
+    {
+        $answer = new Comment();
+        $answer->setTicket($ticket);
+        $answer->setAuthor($author);
+        $answer->setContent($answerContent);
+        $answer->setParentId($parentId);
+        $answer->setDepth(($parent->getDepth() + 1));
+        $answer->setNbReport(0);
+
+        $app['dao.comment']->save($answer);
+        $app['session']->getFlashBag()->add('success', 'Votre commentaire a été ajouté avec succès.');
+    }
+
+    // Redirect to ticket page
+    return $app->redirect($app['url_generator']->generate('ticket', array('id' => $parent->getTicket()->getId())));
+})->bind('answer_treatment');
+
 // Report a comment abuse
 $app->get('/comment/{id}/report', function($id, Request $request) use ($app) {
     $comment = $app['dao.comment']->find($id);
     $app['dao.comment']->reportComment($id);
     $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été signalé. Merci de votre retour.');
 
-    // Redirect to admin home page
+    // Redirect to ticket page
     return $app->redirect($app['url_generator']->generate('ticket', array('id' => $comment->getTicket()->getId())));
 })->bind('report_comment_abuse');
 
@@ -93,7 +127,35 @@ $app->get('/login', function (Request $request) use ($app) {
 	));
 })->bind('login');
 
+// Register form
+$app->match('/register', function(Request $request) use ($app) {
+        // Create a new User object and set its role to 'ROLE_USER'
+    $user = new User();
+    $user->setRole('ROLE_USER');
 
+    $registerForm = $app['form.factory']->create(RegisterType::class, $user);
+    $registerForm->handleRequest($request);
+
+    if ($registerForm->isSubmitted() && $registerForm->isValid()) {
+        // generate a random salt value
+        $salt = substr(md5(time()), 0, 23);
+        $user->setSalt($salt);
+        $plainPassword = $user->getPassword();
+
+        // find the default encoder
+        $encoder = $app['security.encoder.bcrypt'];
+
+        // compute the encoded password
+        $password = $encoder->encodePassword($plainPassword, $user->getSalt());
+        $user->setPassword($password); 
+        $app['dao.user']->save($user);
+        $app['session']->getFlashBag()->add('success', 'L\'utilisateur a bien été créé.');
+    }
+
+    return $app['twig']->render('register.html.twig', array(
+        'title' => 'Inscription',
+        'registerForm' => $registerForm->createView()));
+})->bind('register');
 
 
 
@@ -184,8 +246,49 @@ $app->match('/admin/comment/{id}/edit', function($id, Request $request) use ($ap
         'commentForm' => $commentForm->createView()));
 })->bind('admin_comment_edit');
 
-// Remove a comment
+// Reinitialize number of reports for a comment
+$app->get('/admin/comment/{id}/reinit', function($id, Request $request) use ($app) {
+    // Get comment object then put number of report to 0
+    $comment = $app['dao.comment']->find($id);
+    $comment->setNbReport(0);
+
+    // Then update the comment line in db
+    $app['dao.comment']->save($comment);
+    $app['session']->getFlashBag()->add('success', 'Le commentaire n\'est plus signalé.');
+
+    // Redirect to admin home page
+    return $app->redirect($app['url_generator']->generate('admin'));
+})->bind('admin_comment_reinit');
+
+// Remove a comment and its children
 $app->get('/admin/comment/{id}/delete', function($id, Request $request) use ($app) {
+    // Get comment children with current comment id
+    $comment = $app['dao.comment']->find($id);
+    // Get its children
+    $children = $app['dao.comment']->findChildren($id);
+
+    if ($children)
+    {
+        // Get parent's children and delete them
+        foreach ($children as $child)
+        {
+            // Get child's children and delete them
+            $childrenChildren = $app['dao.comment']->findChildren($child->getId());
+
+            if ($childrenChildren)
+            {
+                foreach ($childrenChildren as $childrenChild)
+                {
+                    $app['dao.comment']->delete($childrenChild->getId());
+                }
+            }
+
+            $app['dao.comment']->delete($child->getId());
+        }
+    }
+
+
+    // Then, current comment is deleted
     $app['dao.comment']->delete($id);
     $app['session']->getFlashBag()->add('success', 'Le commentaire a bien été supprimé.');
 

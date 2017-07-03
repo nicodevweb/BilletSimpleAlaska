@@ -125,13 +125,18 @@ legend span
 	margin : 0 10px 40px 0;
 }
 
+.comment_answer_form
+{
+	height : 50px;
+}
+
 
 /**
  * Login specifications
  */
 
 
-form
+.login
 {
 	margin-top : 40px;
 }
